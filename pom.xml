@@ -33,6 +33,13 @@
       <version.maven.findbugs>3.0.0</version.maven.findbugs>
       <version.maven.project.reports>2.7</version.maven.project.reports>
       <version.maven.shade>2.3</version.maven.shade>
+      <version.maven.clean>2.5</version.maven.clean>
+      <!--compiler.exec>arm-linux-gnu-gcc</compiler.exec-->
+      <compiler.exec>gcc</compiler.exec>
+      <compiler.includes>-I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/linux -I/usr/include</compiler.includes>
+      <linker.options>-shared --gc-sections</linker.options>
+      <!--linker.exec>arm-linux-gnu-ld</linker.exec-->
+      <linker.exec>ld</linker.exec>
    </properties>
    <dependencies>
    </dependencies>
@@ -44,6 +51,39 @@
             <configuration>
                <source>${java.level}</source>
                <target>${java.level}</target>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>native-maven-plugin</artifactId>
+            <extensions>true</extensions>
+            <executions>
+               <execution>
+                  <id>javah-linux</id>
+                  <inherited>false</inherited>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>javah</goal>
+                  </goals>
+                  <configuration>
+                     <javahClassNames>
+                        <javahClassName>io.silverspoon.mmap.NativeMmap</javahClassName>
+                     </javahClassNames>
+                     <javahVerbose>true</javahVerbose>
+                     <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+            <configuration>
+               <compilerExecutable>${compiler.exec}</compilerExecutable>
+               <linkerExecutable>${linker.exec}</linkerExecutable>
+               <compilerStartOptions>
+                  <compilerStartOption>${compiler.includes}</compilerStartOption>
+                  <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
+               </compilerStartOptions>
+               <linkerStartOptions>
+                  <linkerStartOption>${linker.options}</linkerStartOption>
+               </linkerStartOptions>
             </configuration>
          </plugin>
          <plugin>
@@ -74,8 +114,18 @@
          <plugins>
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-source-plugin</artifactId>
+               <configuration>
+                  <includes>
+                     <include>**/*.c</include>
+                     <include>**/*.h</include>
+                  </includes>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-clean-plugin</artifactId>
-               <version>2.5</version>
+               <version>${version.maven.clean}</version>
                <configuration>
                   <filesets>
                      <fileset>
