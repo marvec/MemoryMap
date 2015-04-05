@@ -1,4 +1,4 @@
-package io.silverspoon.mmap;
+package io.silverspoon.mmap.jni;
 
 import java.io.FileDescriptor;
 
