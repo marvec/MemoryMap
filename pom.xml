@@ -59,11 +59,11 @@
             <artifactId>native-maven-plugin</artifactId>
             <version>${version.maven.native}</version>
             <extensions>true</extensions>
-            <executions>
+            <!--executions>
                <execution>
                   <id>javah-linux</id>
                   <inherited>false</inherited>
-                  <!--phase>generate-sources</phase-->
+                  <phase>generate-sources</phase>
                   <goals>
                      <goal>javah</goal>
                   </goals>
@@ -76,36 +76,27 @@
                      <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
                   </configuration>
                </execution>
-               <execution>
-                  <id>compile-linux</id>
-                  <inherited>false</inherited>
-                  <goals>
-                     <goal>compile</goal>
-                  </goals>
-                  <phase>compile</phase>
-                  <configuration>
-                     <compilerExecutable>${compiler.exec}</compilerExecutable>
-                     <compilerStartOptions>
-                        <compilerStartOption>${compiler.includes}</compilerStartOption>
-                        <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
-                     </compilerStartOptions>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>link-linux</id>
-                  <inherited>false</inherited>
-                  <goals>
-                     <goal>link</goal>
-                  </goals>
-                  <phase>process-classes</phase>
-                  <configuration>
-                     <linkerExecutable>${linker.exec}</linkerExecutable>
-                     <linkerStartOptions>
-                        <linkerStartOption>${linker.options}</linkerStartOption>
-                     </linkerStartOptions>
-                  </configuration>
-               </execution>
-            </executions>
+            </executions-->
+            <configuration>
+               <sources>
+                  <source>
+                     <directory>src/main/c/linux/jni</directory>
+                     <includes>
+                        <include>**/*.c</include>
+                        <include>**/*.h</include>
+                     </includes>
+                  </source>
+               </sources>
+               <compilerExecutable>${compiler.exec}</compilerExecutable>
+               <compilerStartOptions>
+                  <compilerStartOption>${compiler.includes}</compilerStartOption>
+                  <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
+               </compilerStartOptions>
+               <linkerExecutable>${linker.exec}</linkerExecutable>
+               <linkerStartOptions>
+                  <linkerStartOption>${linker.options}</linkerStartOption>
+               </linkerStartOptions>
+            </configuration>
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
