@@ -34,6 +34,7 @@
       <version.maven.project.reports>2.7</version.maven.project.reports>
       <version.maven.shade>2.3</version.maven.shade>
       <version.maven.clean>2.5</version.maven.clean>
+      <version.maven.native>1.0-alpha-8</version.maven.native>
       <!--compiler.exec>arm-linux-gnu-gcc</compiler.exec-->
       <compiler.exec>gcc</compiler.exec>
       <compiler.includes>-I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/linux -I/usr/include</compiler.includes>
@@ -56,35 +57,55 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>native-maven-plugin</artifactId>
+            <version>${version.maven.native}</version>
             <extensions>true</extensions>
             <executions>
                <execution>
                   <id>javah-linux</id>
                   <inherited>false</inherited>
-                  <phase>generate-sources</phase>
+                  <!--phase>generate-sources</phase-->
                   <goals>
                      <goal>javah</goal>
                   </goals>
                   <configuration>
                      <javahClassNames>
-                        <javahClassName>io.silverspoon.mmap.NativeMmap</javahClassName>
+                        <javahClassName>io.silverspoon.mmap.jni.NativeMmap</javahClassName>
+                        <javahClassName>io.silverspoon.mmap.jni.NativeTools</javahClassName>
                      </javahClassNames>
                      <javahVerbose>true</javahVerbose>
                      <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
                   </configuration>
                </execution>
+               <execution>
+                  <id>compile-linux</id>
+                  <inherited>false</inherited>
+                  <goals>
+                     <goal>compile</goal>
+                  </goals>
+                  <phase>compile</phase>
+                  <configuration>
+                     <compilerExecutable>${compiler.exec}</compilerExecutable>
+                     <compilerStartOptions>
+                        <compilerStartOption>${compiler.includes}</compilerStartOption>
+                        <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
+                     </compilerStartOptions>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>link-linux</id>
+                  <inherited>false</inherited>
+                  <goals>
+                     <goal>link</goal>
+                  </goals>
+                  <phase>process-classes</phase>
+                  <configuration>
+                     <linkerExecutable>${linker.exec}</linkerExecutable>
+                     <linkerStartOptions>
+                        <linkerStartOption>${linker.options}</linkerStartOption>
+                     </linkerStartOptions>
+                  </configuration>
+               </execution>
             </executions>
-            <configuration>
-               <compilerExecutable>${compiler.exec}</compilerExecutable>
-               <linkerExecutable>${linker.exec}</linkerExecutable>
-               <compilerStartOptions>
-                  <compilerStartOption>${compiler.includes}</compilerStartOption>
-                  <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
-               </compilerStartOptions>
-               <linkerStartOptions>
-                  <linkerStartOption>${linker.options}</linkerStartOption>
-               </linkerStartOptions>
-            </configuration>
          </plugin>
          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
