@@ -3,8 +3,8 @@
    <groupId>io.silverspoon</groupId>
    <artifactId>memorymap</artifactId>
    <version>1.0-SNAPSHOT</version>
-   <packaging>jar</packaging>
-   <name>SilverSpoon - Memory Map PoC</name>
+   <packaging>pom</packaging>
+   <name>SilverSpoon - Memory Map</name>
    <description>Microservices Platform.</description>
    <url>http://www.silverspoon.io</url>
    <inceptionYear>2015</inceptionYear>
@@ -42,89 +42,24 @@
       <!--linker.exec>arm-linux-gnu-ld</linker.exec-->
       <linker.exec>ld</linker.exec>
    </properties>
+   <modules>
+      <module>native</module>
+      <module>mmap</module>
+   </modules>
    <dependencies>
    </dependencies>
    <build>
-      <plugins>
-         <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>${version.maven.compiler}</version>
-            <configuration>
-               <source>${java.level}</source>
-               <target>${java.level}</target>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>native-maven-plugin</artifactId>
-            <version>${version.maven.native}</version>
-            <extensions>true</extensions>
-            <!--executions>
-               <execution>
-                  <id>javah-linux</id>
-                  <inherited>false</inherited>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>javah</goal>
-                  </goals>
-                  <configuration>
-                     <javahClassNames>
-                        <javahClassName>io.silverspoon.mmap.jni.NativeMmap</javahClassName>
-                        <javahClassName>io.silverspoon.mmap.jni.NativeTools</javahClassName>
-                     </javahClassNames>
-                     <javahVerbose>true</javahVerbose>
-                     <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
-                  </configuration>
-               </execution>
-            </executions-->
-            <configuration>
-               <sources>
-                  <source>
-                     <directory>src/main/c/linux/jni</directory>
-                     <includes>
-                        <include>**/*.c</include>
-                        <include>**/*.h</include>
-                     </includes>
-                  </source>
-               </sources>
-               <compilerExecutable>${compiler.exec}</compilerExecutable>
-               <compilerStartOptions>
-                  <compilerStartOption>${compiler.includes}</compilerStartOption>
-                  <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption>
-               </compilerStartOptions>
-               <linkerExecutable>${linker.exec}</linkerExecutable>
-               <linkerStartOptions>
-                  <linkerStartOption>${linker.options}</linkerStartOption>
-               </linkerStartOptions>
-            </configuration>
-         </plugin>
-         <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <version>${version.maven.surefire}</version>
-            <configuration>
-               <forkCount>1</forkCount>
-            </configuration>
-         </plugin>
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-shade-plugin</artifactId>
-            <version>${version.maven.shade}</version>
-            <configuration>
-               <!-- put your configurations here -->
-            </configuration>
-            <executions>
-               <execution>
-                  <phase>package</phase>
-                  <goals>
-                     <goal>shade</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
       <pluginManagement>
          <plugins>
             <plugin>
+               <artifactId>maven-compiler-plugin</artifactId>
+               <version>${version.maven.compiler}</version>
+               <configuration>
+                  <source>${java.level}</source>
+                  <target>${java.level}</target>
+               </configuration>
+            </plugin>
+            <!--plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-source-plugin</artifactId>
                <configuration>
@@ -133,7 +68,7 @@
                      <include>**/*.h</include>
                   </includes>
                </configuration>
-            </plugin>
+            </plugin-->
             <plugin>
                <groupId>org.apache.maven.plugins</groupId>
                <artifactId>maven-clean-plugin</artifactId>
@@ -153,6 +88,29 @@
                      </fileset>
                   </filesets>
                </configuration>
+            </plugin>
+            <plugin>
+               <artifactId>maven-surefire-plugin</artifactId>
+               <version>${version.maven.surefire}</version>
+               <configuration>
+                  <forkCount>1</forkCount>
+               </configuration>
+            </plugin>
+            <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-shade-plugin</artifactId>
+               <version>${version.maven.shade}</version>
+               <configuration>
+                  <!-- put your configurations here -->
+               </configuration>
+               <executions>
+                  <execution>
+                     <phase>package</phase>
+                     <goals>
+                        <goal>shade</goal>
+                     </goals>
+                  </execution>
+               </executions>
             </plugin>
          </plugins>
       </pluginManagement>
