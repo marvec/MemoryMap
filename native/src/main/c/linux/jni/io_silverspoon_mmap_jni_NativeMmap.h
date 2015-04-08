@@ -7,18 +7,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#undef io_silverspoon_mmap_jni_NativeMmap_NONE
-#define io_silverspoon_mmap_jni_NativeMmap_NONE 0L
-#undef io_silverspoon_mmap_jni_NativeMmap_READ
-#define io_silverspoon_mmap_jni_NativeMmap_READ 1L
-#undef io_silverspoon_mmap_jni_NativeMmap_WRITE
-#define io_silverspoon_mmap_jni_NativeMmap_WRITE 2L
-#undef io_silverspoon_mmap_jni_NativeMmap_EXEC
-#define io_silverspoon_mmap_jni_NativeMmap_EXEC 4L
-#undef io_silverspoon_mmap_jni_NativeMmap_SHARED
-#define io_silverspoon_mmap_jni_NativeMmap_SHARED 1L
-#undef io_silverspoon_mmap_jni_NativeMmap_PRIVATE
-#define io_silverspoon_mmap_jni_NativeMmap_PRIVATE 2L
+#undef io_silverspoon_mmap_jni_NativeMmap_PROT_NONE
+#define io_silverspoon_mmap_jni_NativeMmap_PROT_NONE 0L
+#undef io_silverspoon_mmap_jni_NativeMmap_PROT_READ
+#define io_silverspoon_mmap_jni_NativeMmap_PROT_READ 1L
+#undef io_silverspoon_mmap_jni_NativeMmap_PROT_WRITE
+#define io_silverspoon_mmap_jni_NativeMmap_PROT_WRITE 2L
+#undef io_silverspoon_mmap_jni_NativeMmap_PROT_EXEC
+#define io_silverspoon_mmap_jni_NativeMmap_PROT_EXEC 4L
+#undef io_silverspoon_mmap_jni_NativeMmap_FLAGS_SHARED
+#define io_silverspoon_mmap_jni_NativeMmap_FLAGS_SHARED 1L
+#undef io_silverspoon_mmap_jni_NativeMmap_FLAGS_PRIVATE
+#define io_silverspoon_mmap_jni_NativeMmap_FLAGS_PRIVATE 2L
 /*
  * Class:     io_silverspoon_mmap_jni_NativeMmap
  * Method:    createMap
