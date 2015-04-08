@@ -33,25 +33,31 @@ public class JavaMmap implements Closeable {
    private final Unsafe unsafe = JavaMmap.getUnsafe();
    private final int fileDescriptor;
    private final long address;
+   private final long maddress;
    private final long size;
 
    public JavaMmap(final String fileName, final long offset, final long size) {
       fileDescriptor = NativeTools.open(fileName, NativeTools.OPEN_READ_WRITE);
-      address = NativeMmap.createMap(0, size, NativeMmap.PROT_READ | NativeMmap.PROT_WRITE, NativeMmap.FLAGS_SHARED, fileDescriptor, offset);
+      System.out.println("File descriptor: " + fileDescriptor);
+      address = unsafe.allocateMemory(size);
+      System.out.println("Allocated native memory: " + address);
+      maddress = NativeMmap.createMap(address, size, NativeMmap.PROT_READ | NativeMmap.PROT_WRITE, NativeMmap.FLAGS_SHARED, fileDescriptor, offset);
+      System.out.println("Obtained file at address: " + maddress);
       this.size = size;
    }
 
    public void setLong(final long offset, final long value) {
-      unsafe.putAddress(address + offset, value);
+      unsafe.putLong(maddress + offset, value);
    }
 
    public long getLong(final long offset) {
-      return unsafe.getAddress(address + offset);
+      return unsafe.getAddress(maddress + offset);
    }
 
    @Override
    public void close() throws IOException {
-      NativeMmap.deleteMap(address, size);
+      NativeMmap.deleteMap(maddress, size);
+      unsafe.freeMemory(address);
       NativeTools.close(fileDescriptor);
    }
 
@@ -66,7 +72,7 @@ public class JavaMmap implements Closeable {
    }
 
    public static void main(String[] args) throws IOException {
-      System.loadLibrary("memorymap-native");
+      System.loadLibrary("javammap");
       JavaMmap map = new JavaMmap("/home/mvecera/mapa", 10, 16);
       map.setLong(2, 0xFFFFFFFF);
       map.close();

@@ -20,6 +20,7 @@
       </dependency>
    </dependencies>
    <build>
+      <finalName>libjavammap</finalName>
       <plugins>
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
@@ -64,6 +65,7 @@
                <linkerStartOptions>
                   <linkerStartOption>${linker.options}</linkerStartOption>
                </linkerStartOptions>
+               <linkerFinalName>libjavammap</linkerFinalName>
             </configuration>
          </plugin>
          <plugin>
