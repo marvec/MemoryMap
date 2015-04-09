@@ -1,7 +1,10 @@
 #include <jni.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <errno.h>
 #include <sys/mman.h>
 #include "io_silverspoon_mmap_jni_NativeMmap.h"
+#include "util.h"
 
 /*
  * Class:     io_silverspoon_mmap_jni_NativeMmap
@@ -11,7 +14,12 @@
 JNIEXPORT jlong JNICALL Java_io_silverspoon_mmap_jni_NativeMmap_createMap
   (JNIEnv * env, jobject clazz, jlong address, jlong length, jint prot, jint flags, jint fileDescriptor, jlong offset) {
 	int * addrPointer = (int*)(intptr_t)address;
-	return (jlong)(intptr_t)mmap(addrPointer, length, prot, flags, fileDescriptor, offset);
+	jlong ret = (jlong)(intptr_t)mmap(addrPointer, length, prot, flags, fileDescriptor, offset);
+	if (ret == -1) {
+		perror(NULL);
+		throwRuntimeException(env, "Error %d\n", errno);
+	}
+	return ret;
 }
 
 /*
