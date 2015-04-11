@@ -33,31 +33,37 @@ public class JavaMmap implements Closeable {
    private final Unsafe unsafe = JavaMmap.getUnsafe();
    private final int fileDescriptor;
    private final long address;
-   private final long maddress;
+   private final long correctedAddress;
    private final long size;
 
    public JavaMmap(final String fileName, final long offset, final long size) {
+      long page = offset / getPageSize();
+      long pageAddress = page * getPageSize();
+      long offsetCorrection = offset - pageAddress;
+
       fileDescriptor = NativeTools.open(fileName, NativeTools.OPEN_READ_WRITE);
-      System.out.println("File descriptor: " + fileDescriptor);
-      address = unsafe.allocateMemory(size);
-      System.out.println("Allocated native memory: " + address);
-      maddress = NativeMmap.createMap(address, size, NativeMmap.PROT_READ | NativeMmap.PROT_WRITE, NativeMmap.FLAGS_SHARED, fileDescriptor, offset);
-      System.out.println("Obtained file at address: " + maddress);
+      address = NativeMmap.createMap(0, size, NativeMmap.PROT_READ | NativeMmap.PROT_WRITE, NativeMmap.MAP_SHARED, fileDescriptor, pageAddress);
+      correctedAddress = address + offsetCorrection;
+      System.out.println("Obtained file at address: " + address);
+
       this.size = size;
    }
 
    public void setLong(final long offset, final long value) {
-      unsafe.putLong(maddress + offset, value);
+      unsafe.putLong(correctedAddress + offset, value);
    }
 
    public long getLong(final long offset) {
-      return unsafe.getAddress(maddress + offset);
+      return unsafe.getAddress(correctedAddress + offset);
+   }
+
+   public int getPageSize() {
+      return unsafe.pageSize();
    }
 
    @Override
    public void close() throws IOException {
-      NativeMmap.deleteMap(maddress, size);
-      unsafe.freeMemory(address);
+      NativeMmap.deleteMap(address, size);
       NativeTools.close(fileDescriptor);
    }
 
@@ -73,7 +79,7 @@ public class JavaMmap implements Closeable {
 
    public static void main(String[] args) throws IOException {
       System.loadLibrary("javammap");
-      JavaMmap map = new JavaMmap("/home/mvecera/mapa", 10, 16);
+      JavaMmap map = new JavaMmap("/home/mvecera/mapa", 2, 4);
       map.setLong(2, 0xFFFFFFFF);
       map.close();
    }

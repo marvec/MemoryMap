@@ -35,6 +35,7 @@
       <version.maven.shade>2.3</version.maven.shade>
       <version.maven.clean>2.5</version.maven.clean>
       <version.maven.native>1.0-alpha-8</version.maven.native>
+      <version.maven.source>2.4</version.maven.source>
       <!--compiler.exec>arm-linux-gnu-gcc</compiler.exec-->
       <compiler.exec>gcc</compiler.exec>
       <compiler.includes>-I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/linux -I/usr/include</compiler.includes>

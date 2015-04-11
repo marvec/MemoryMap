@@ -71,6 +71,7 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
+            <version>${version.maven.source}</version>
             <configuration>
                <includes>
                   <include>**/*.c</include>

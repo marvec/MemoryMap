@@ -7,8 +7,8 @@ public class NativeMmap {
    public static final int PROT_WRITE = 0x02;
    public static final int PROT_EXEC = 0x04;
 
-   public static final int FLAGS_SHARED = 0x01;
-   public static final int FLAGS_PRIVATE = 0x02;
+   public static final int MAP_SHARED = 0x01;
+   public static final int MAP_PRIVATE = 0x02;
 
    public static native long createMap(long address, long length, int protection, int flags, int fileDescriptor, long offset);
 
