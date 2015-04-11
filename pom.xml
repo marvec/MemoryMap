@@ -46,6 +46,7 @@
    <modules>
       <module>native</module>
       <module>mmap</module>
+      <module>bbb</module>
    </modules>
    <dependencies>
    </dependencies>
