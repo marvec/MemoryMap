@@ -19,8 +19,29 @@
  */
 package io.silverspoon.hw.bbb;
 
+import java.io.IOException;
+
+import io.silverspoon.mmap.JavaMmap;
+
 public class BeagleBoneBlack {
 
-   public static void main(String[] args) throws IOException {
+   public static final long GPIO_START = 0x4804C000;
+   public static final long GPIO_END = 0x4804DFFF;
+   public static final long GPIO_SIZE = GPIO_END - GPIO_START;
+   public static final long GPIO_OE = 0x134;
+   public static final long GPIO_SET = 0x194;
+   public static final long GPIO_CLEAR = 0x190;
+   public static final int USR1_LED = 1 << 22;
+
+   public static void main(String[] args) throws IOException, InterruptedException {
+      JavaMmap mmap = new JavaMmap("/dev/mem", GPIO_START, GPIO_SIZE);
+
+      long l = mmap.getLong(GPIO_OE);
+      mmap.setLong(GPIO_OE, l & (0xFFFFFFFF - USR1_LED));
+      mmap.setLong(GPIO_SET, USR1_LED);
+
+      Thread.sleep(1000);
+
+      mmap.setLong(GPIO_CLEAR, USR1_LED);
    }
 }
