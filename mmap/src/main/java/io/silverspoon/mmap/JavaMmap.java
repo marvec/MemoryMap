@@ -37,6 +37,8 @@ public class JavaMmap implements Closeable {
    private final long size;
 
    public JavaMmap(final String fileName, final long offset, final long size) {
+      System.loadLibrary("javammap");
+
       long page = offset / getPageSize();
       long pageAddress = page * getPageSize();
       long offsetCorrection = offset - pageAddress;
@@ -78,7 +80,6 @@ public class JavaMmap implements Closeable {
    }
 
    public static void main(String[] args) throws IOException {
-      System.loadLibrary("javammap");
       JavaMmap map = new JavaMmap("/home/mvecera/mapa", 2, 4);
       map.setLong(2, 0xFFFFFFFF);
       map.close();
