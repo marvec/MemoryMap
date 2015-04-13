@@ -31,17 +31,22 @@ public class BeagleBoneBlack {
    public static final long GPIO_OE = 0x134;
    public static final long GPIO_SET = 0x194;
    public static final long GPIO_CLEAR = 0x190;
-   public static final int USR1_LED = 1 << 22;
+   public static final int USR1_LED = 1 << 19; // 22
 
    public static void main(String[] args) throws IOException, InterruptedException {
       JavaMmap mmap = new JavaMmap("/dev/mem", GPIO_START, GPIO_SIZE);
 
       long l = mmap.getLong(GPIO_OE);
       mmap.setLong(GPIO_OE, l & (0xFFFFFFFF - USR1_LED));
-      mmap.setLong(GPIO_SET, USR1_LED);
 
-      Thread.sleep(1000);
+      while (true) {
+         mmap.setLong(GPIO_SET, USR1_LED);
 
-      mmap.setLong(GPIO_CLEAR, USR1_LED);
+//         Thread.sleep(1);
+
+         mmap.setLong(GPIO_CLEAR, USR1_LED);
+         
+//         Thread.sleep(1);
+      }
    }
 }

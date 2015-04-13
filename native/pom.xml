@@ -58,8 +58,8 @@
                <linkerExecutable>${linker.exec}</linkerExecutable>
                <compilerStartOptions>
                   <compilerStartOption>${compiler.includes}</compilerStartOption>
-                  <compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline</compilerStartOption>
-                  <!--compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mlittle-endian -DARM -DARCH="ARM" -marm</compilerStartOption-->
+                  <!--compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline</compilerStartOption-->
+                  <compilerStartOption>-O3 -fPIC -fgnu89-inline -mfloat-abi=hard</compilerStartOption>
                   <!--compilerStartOption>-std=gnu11 -O3 -fPIC -fgnu89-inline -mfloat-abi=hard -mtune=cortex-a8</compilerStartOption-->
                </compilerStartOptions>
                <linkerStartOptions>

@@ -52,11 +52,13 @@ public class JavaMmap implements Closeable {
    }
 
    public void setLong(final long offset, final long value) {
-      unsafe.putLong(correctedAddress + offset, value);
+      NativeMmap.setLongValueAt(correctedAddress + offset, value);
+      //unsafe.putLong(correctedAddress + offset, value);
    }
 
    public long getLong(final long offset) {
-      return unsafe.getAddress(correctedAddress + offset);
+      return NativeMmap.getLongValueAt(correctedAddress + offset);
+      //return unsafe.getAddress(correctedAddress + offset);
    }
 
    public int getPageSize() {
