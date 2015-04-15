@@ -47,6 +47,7 @@
       <module>native</module>
       <module>mmap</module>
       <module>bbb</module>
+      <module>rpi2</module>
    </modules>
    <dependencies>
    </dependencies>
